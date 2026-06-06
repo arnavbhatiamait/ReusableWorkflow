@@ -2,20 +2,16 @@
 FROM ghcr.io/actions/actions-runner:latest
 USER root
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    wget \
-    gnupg \
-    python3 \
-    python3-venv \
-    python3-pip \
-    fonts-liberation \
-    libnss3 \
-    libxss1 \
-    libasound2 \
-    libgtk-3-0 \
-    libgbm1 \
-  && rm -rf /var/lib/apt/lists/*
+RUN set -eux; \
+  apt-get update; \
+  base_packages="ca-certificates wget gnupg python3 python3-venv python3-pip fonts-liberation libnss3 libxss1 libgbm1"; \
+  if apt-cache show libasound2t64 >/dev/null 2>&1; then \
+    base_packages="$base_packages libasound2t64 libgtk-3-0t64"; \
+  else \
+    base_packages="$base_packages libasound2 libgtk-3-0"; \
+  fi; \
+  apt-get install -y --no-install-recommends $base_packages; \
+  rm -rf /var/lib/apt/lists/*
 
 # Install Google Chrome (APT)
 RUN wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg \

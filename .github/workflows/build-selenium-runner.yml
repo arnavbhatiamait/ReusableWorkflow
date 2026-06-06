@@ -20,7 +20,7 @@ jobs:
         uses: docker/metadata-action@v5
         id : meta
         with:
-          images: ghrc.io/${{ github.repository}}/selenium-runner
+          images: ghcr.io/${{ github.repository}}/selenium-runner
           tags: |
             type=raw,value=latest
       - name: Log in to GitHub Container Registry
